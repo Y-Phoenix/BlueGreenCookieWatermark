@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "蓝绿部署检测器",
+  "version": "1.0.0",
+  "description": "检测当前页面的蓝绿部署cookie并显示环境提示",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "cookies",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "蓝绿部署检测器"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+} 

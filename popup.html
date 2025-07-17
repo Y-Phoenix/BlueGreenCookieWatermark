@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝绿部署检测器</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔵 蓝绿部署检测器</h1>
+            <p class="subtitle">设置cookie检测规则</p>
+        </div>
+        
+        <div class="form-group">
+            <label for="cookieKey">Cookie Key 名称:</label>
+            <input type="text" id="cookieKey" placeholder="例如: environment, env, deployment">
+        </div>
+        
+        <div class="form-group">
+            <label for="cookieValue">蓝环境 Cookie 值:</label>
+            <input type="text" id="cookieValue" placeholder="例如: blue, staging, test">
+        </div>
+        
+        <div class="form-group">
+            <label for="displayText">显示文本:</label>
+            <input type="text" id="displayText" placeholder="例如: 蓝环境" value="蓝环境">
+        </div>
+        
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="enableDetection">
+                <span class="checkmark"></span>
+                启用检测
+            </label>
+        </div>
+        
+        <div class="button-group">
+            <button id="saveBtn" class="btn btn-primary">保存设置</button>
+            <button id="testBtn" class="btn btn-secondary">测试检测</button>
+            <button id="setCookieBtn" class="btn btn-success">一键设置Cookie</button>
+            <button id="clearCookieBtn" class="btn btn-danger">一键清除Cookie</button>
+        </div>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="info">
+            <h3>使用说明:</h3>
+            <ul>
+                <li>设置要检测的cookie key名称</li>
+                <li>设置蓝环境对应的cookie值</li>
+                <li>当页面cookie匹配时，右上角会显示提示</li>
+                <li>支持所有网站</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html> 

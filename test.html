@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝绿部署检测器 - 测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+        .test-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .cookie-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔵 蓝绿部署检测器 - 测试页面</h1>
+        
+        <div class="info">
+            <strong>使用说明：</strong>
+            <ol>
+                <li>确保已安装并启用蓝绿部署检测器插件</li>
+                <li>在插件设置中配置Cookie Key和Value</li>
+                <li>使用下面的按钮设置测试Cookie</li>
+                <li>观察页面右上角是否出现蓝环境提示</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Cookie 测试工具</h3>
+            <p>点击下面的按钮来设置不同的测试Cookie：</p>
+            
+            <button onclick="setCookie('environment', 'blue')">设置蓝环境 Cookie</button>
+            <button onclick="setCookie('environment', 'green')">设置绿环境 Cookie</button>
+            <button onclick="setCookie('deployment', 'staging')">设置测试环境 Cookie</button>
+            <button onclick="setCookie('service_version', 'v2')">设置V2版本 Cookie</button>
+            <button onclick="clearAllCookies()">清除所有测试Cookie</button>
+            
+            <div class="cookie-display" id="cookieDisplay">
+                <strong>当前页面Cookie：</strong><br>
+                <span id="currentCookies">无</span>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 常见配置示例</h3>
+            <div class="cookie-display">
+                <strong>示例1 - 环境检测：</strong><br>
+                Cookie Key: <code>environment</code><br>
+                Cookie Value: <code>blue</code><br>
+                显示文本: <code>蓝环境</code>
+            </div>
+            
+            <div class="cookie-display">
+                <strong>示例2 - 部署类型：</strong><br>
+                Cookie Key: <code>deployment</code><br>
+                Cookie Value: <code>staging</code><br>
+                显示文本: <code>测试环境</code>
+            </div>
+            
+            <div class="cookie-display">
+                <strong>示例3 - 服务版本：</strong><br>
+                Cookie Key: <code>service_version</code><br>
+                Cookie Value: <code>v2</code><br>
+                显示文本: <code>V2版本</code>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ 注意事项：</strong>
+            <ul>
+                <li>测试Cookie只在当前页面有效</li>
+                <li>刷新页面后Cookie会消失</li>
+                <li>插件检测间隔为2秒</li>
+                <li>确保插件设置中的Cookie Key和Value与测试Cookie匹配</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 设置Cookie
+        function setCookie(name, value) {
+            document.cookie = `${name}=${value}; path=/`;
+            updateCookieDisplay();
+            showMessage(`已设置Cookie: ${name}=${value}`);
+        }
+
+        // 清除所有测试Cookie
+        function clearAllCookies() {
+            const cookies = ['environment', 'deployment', 'service_version'];
+            cookies.forEach(cookie => {
+                document.cookie = `${cookie}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+            });
+            updateCookieDisplay();
+            showMessage('已清除所有测试Cookie');
+        }
+
+        // 更新Cookie显示
+        function updateCookieDisplay() {
+            const cookies = document.cookie;
+            const cookieElement = document.getElementById('currentCookies');
+            
+            if (cookies) {
+                cookieElement.textContent = cookies;
+            } else {
+                cookieElement.textContent = '无';
+            }
+        }
+
+        // 显示消息
+        function showMessage(message) {
+            const status = document.createElement('div');
+            status.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #4caf50;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 6px;
+                z-index: 10000;
+                font-weight: 600;
+            `;
+            status.textContent = message;
+            document.body.appendChild(status);
+            
+            setTimeout(() => {
+                document.body.removeChild(status);
+            }, 2000);
+        }
+
+        // 页面加载时更新Cookie显示
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCookieDisplay();
+        });
+
+        // 定期更新Cookie显示
+        setInterval(updateCookieDisplay, 1000);
+    </script>
+</body>
+</html> 
