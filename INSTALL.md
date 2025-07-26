@@ -1,107 +1,131 @@
-# 安装说明
+# 蓝绿部署检测器 - 安装指南
 
-## 快速安装
+## 功能介绍
 
-1. **下载项目**
-   ```bash
-   git clone <repository-url>
-   cd blue-extension
-   ```
+蓝绿部署检测器是一个Chrome浏览器插件，支持两种检测模式：
 
-2. **转换图标**（可选）
-   - 将 `icons/icon.svg` 转换为PNG格式
-   - 需要生成 16x16, 48x48, 128x128 三种尺寸
-   - 可以使用在线工具如 https://convertio.co/svg-png/
+1. **Cookie检测模式**：检测页面cookie中的指定key和value
+2. **请求检测模式**：向指定路径发送请求，检测返回内容是否包含指定值
 
-3. **安装插件**
-   - 打开Chrome浏览器
-   - 访问 `chrome://extensions/`
-   - 开启"开发者模式"
-   - 点击"加载已解压的扩展程序"
-   - 选择项目文件夹
+当检测条件匹配时，页面会显示水印提示，帮助开发者快速识别当前环境。
 
-## 图标转换方法
+## 安装步骤
 
-### 方法1：在线转换
-1. 访问 https://convertio.co/svg-png/
-2. 上传 `icons/icon.svg` 文件
-3. 设置输出尺寸为 128x128
-4. 下载PNG文件并重命名为 `icon128.png`
-5. 重复步骤生成 48x48 和 16x16 版本
+### 1. 下载插件文件
+确保你已经下载了所有插件文件到本地目录。
 
-### 方法2：使用命令行工具
-```bash
-# 安装 ImageMagick
-brew install imagemagick  # macOS
-# 或
-sudo apt-get install imagemagick  # Ubuntu
+### 2. 打开Chrome扩展管理页面
+在Chrome浏览器中访问：`chrome://extensions/`
 
-# 转换图标
-convert icons/icon.svg -resize 128x128 icons/icon128.png
-convert icons/icon.svg -resize 48x48 icons/icon48.png
-convert icons/icon.svg -resize 16x16 icons/icon16.png
+### 3. 启用开发者模式
+在扩展管理页面右上角，打开"开发者模式"开关。
+
+### 4. 加载插件
+1. 点击"加载已解压的扩展程序"按钮
+2. 选择包含插件文件的文件夹
+3. 确认加载
+
+### 5. 验证安装
+安装成功后，你应该能在Chrome工具栏看到插件图标 🔵。
+
+## 使用方法
+
+### Cookie检测模式
+
+1. 点击插件图标打开设置面板
+2. 选择"Cookie检测"模式
+3. 设置以下参数：
+   - **Cookie Key名称**：要检测的cookie键名（如：`environment`）
+   - **蓝环境Cookie值**：匹配的cookie值（如：`blue`）
+   - **显示文本**：水印显示的文本（如：`蓝环境`）
+4. 启用检测并保存设置
+
+### 请求检测模式
+
+1. 点击插件图标打开设置面板
+2. 选择"请求检测"模式
+3. 设置以下参数：
+   - **请求路径**：API端点路径（支持相对路径如`/api/env`或绝对路径如`https://api.example.com/status`）
+   - **检测值**：检查返回内容是否包含的值（如：`blue`）
+   - **显示文本**：水印显示的文本（如：`蓝环境`）
+4. 启用检测并保存设置
+
+## 配置示例
+
+### Cookie检测示例
+```
+检测模式: Cookie检测
+Cookie Key: environment
+Cookie Value: blue
+显示文本: 蓝环境
 ```
 
-### 方法3：使用Node.js
-```bash
-# 安装 sharp
-npm install -g sharp-cli
-
-# 转换图标
-sharp -i icons/icon.svg -o icons/icon128.png resize 128 128
-sharp -i icons/icon.svg -o icons/icon48.png resize 48 48
-sharp -i icons/icon.svg -o icons/icon16.png resize 16 16
+### 请求检测示例
+```
+检测模式: 请求检测
+请求路径: /api/env
+检测值: blue
+显示文本: 蓝环境
 ```
 
-## 测试插件
+## 测试功能
 
-1. **设置配置**
-   - 点击插件图标打开设置面板
-   - 设置Cookie Key（如：`environment`）
-   - 设置Cookie Value（如：`blue`）
-   - 点击"保存设置"
+1. 打开测试页面：`http://localhost:8000/test.html`（需要先启动本地服务器）
+2. 使用页面上的测试工具验证功能
+3. 观察页面是否显示水印提示
 
-2. **测试检测**
-   - 打开浏览器开发者工具
-   - 在Console中设置测试cookie：
-   ```javascript
-   document.cookie = "environment=blue; path=/";
-   ```
-   - 页面右上角应该显示蓝环境提示
+### 启动测试服务器
+```bash
+cd /path/to/blue-extension
+python3 -m http.server 8000
+```
 
-3. **清除测试**
-   ```javascript
-   document.cookie = "environment=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-   ```
+## 高级功能
+
+### 一键设置Cookie（仅Cookie模式）
+在Cookie检测模式下，可以使用"一键设置Cookie"和"一键清除Cookie"按钮快速操作cookie。
+
+### 测试检测
+点击"测试检测"按钮可以立即触发一次检测，无需等待定时检测。
+
+### 多域名支持
+插件支持为不同的网站域名设置独立的检测规则，每个域名的设置会自动保存。
+
+## 注意事项
+
+1. **权限要求**：插件需要访问所有网站的权限以进行检测
+2. **检测频率**：自动检测间隔为5秒，避免频繁请求
+3. **请求检测**：确保目标API端点支持跨域请求或在同源下使用
+4. **Cookie检测**：只检测当前页面的cookie，不包括HttpOnly cookie
 
 ## 故障排除
 
-### 插件不显示
-- 检查manifest.json语法是否正确
-- 确认所有必需文件都存在
-- 重新加载插件
+### 插件无法加载
+- 确保所有文件都在同一目录下
+- 检查manifest.json文件格式是否正确
+- 确保已启用开发者模式
 
 ### 检测不工作
-- 检查Cookie设置是否正确
-- 确认插件权限已授予
-- 查看浏览器控制台是否有错误
+- 检查插件设置是否正确
+- 确认检测已启用
+- 查看浏览器控制台是否有错误信息
+- 使用测试页面验证功能
 
-### 图标不显示
-- 确认PNG图标文件存在
-- 检查图标文件路径是否正确
-- 重新加载插件
+### 请求检测失败
+- 确认API端点可访问
+- 检查网络连接
+- 确认返回内容包含检测值
+- 查看控制台网络请求状态
 
-## 开发模式
+## 更新日志
 
-在开发过程中，可以：
-1. 修改代码后点击"重新加载"
-2. 使用Chrome DevTools调试content script
-3. 查看background script日志
+### v1.1.0
+- 新增请求检测模式
+- 支持相对路径和绝对路径
+- 改进用户界面
+- 优化检测性能
 
-## 发布到Chrome Web Store
-
-1. 打包插件：`zip -r blue-extension.zip .`
-2. 访问 https://chrome.google.com/webstore/devconsole
-3. 上传插件包
-4. 填写描述和截图
-5. 提交审核 
+### v1.0.0
+- 基础Cookie检测功能
+- 水印显示
+- 多域名支持

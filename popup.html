@@ -10,17 +10,51 @@
     <div class="container">
         <div class="header">
             <h1>🔵 蓝绿部署检测器</h1>
-            <p class="subtitle">设置cookie检测规则</p>
+            <p class="subtitle">设置检测规则</p>
         </div>
         
         <div class="form-group">
-            <label for="cookieKey">Cookie Key 名称:</label>
-            <input type="text" id="cookieKey" placeholder="例如: environment, env, deployment">
+            <label>检测模式:</label>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="detectionMode" value="cookie" id="cookieMode" checked>
+                    <span class="radio-mark"></span>
+                    Cookie检测
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="detectionMode" value="request" id="requestMode">
+                    <span class="radio-mark"></span>
+                    请求检测
+                </label>
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="cookieValue">蓝环境 Cookie 值:</label>
-            <input type="text" id="cookieValue" placeholder="例如: blue, staging, test">
+        <!-- Cookie检测设置 -->
+        <div id="cookieSettings" class="detection-settings">
+            <div class="form-group">
+                <label for="cookieKey">Cookie Key 名称:</label>
+                <input type="text" id="cookieKey" placeholder="例如: environment, env, deployment">
+            </div>
+            
+            <div class="form-group">
+                <label for="cookieValue">蓝环境 Cookie 值:</label>
+                <input type="text" id="cookieValue" placeholder="例如: blue, staging, test">
+            </div>
+        </div>
+        
+        <!-- 请求检测设置 -->
+        <div id="requestSettings" class="detection-settings" style="display: none;">
+            <div class="form-group">
+                <label for="requestPath">请求路径:</label>
+                <input type="text" id="requestPath" placeholder="例如: /api/env, https://example.com/status">
+                <small class="help-text">支持相对路径（如 /api/env）或绝对路径（如 https://example.com/status）</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="requestValue">检测值:</label>
+                <input type="text" id="requestValue" placeholder="例如: blue, staging, test">
+                <small class="help-text">检查返回内容是否包含此值</small>
+            </div>
         </div>
         
         <div class="form-group">
@@ -48,14 +82,14 @@
         <div class="info">
             <h3>使用说明:</h3>
             <ul>
-                <li>设置要检测的cookie key名称</li>
-                <li>设置蓝环境对应的cookie值</li>
-                <li>当页面cookie匹配时，右上角会显示提示</li>
-                <li>支持所有网站</li>
+                <li><strong>Cookie检测:</strong> 检测页面cookie中的指定key和value</li>
+                <li><strong>请求检测:</strong> 向指定路径发送请求，检测返回内容是否包含指定值</li>
+                <li>当检测条件匹配时，页面会显示水印提示</li>
+                <li>每个网站可以独立设置不同的检测规则</li>
             </ul>
         </div>
     </div>
     
     <script src="popup.js"></script>
 </body>
-</html> 
+</html>
